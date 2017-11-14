@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/static/css/style.css}"/>
+    <title>Title</title>
+</head>
+<body>
+    <h1>Index</h1>
+    <form onsubmit="return false;">
+        username: <input name="username" value = "muyz"/>
+        password: <input name="password" value = "123"/>
+        <button type="submit" onclick="dologin()">AJAX 登录</button>
+    </form>
+    <form method="post" action="/login">
+        username: <input name="username" value = "muyz"/>
+        password: <input name="password" value = "123"/>
+        <button type="submit">Form 登录</button>
+    </form>
+    <div id="container">
+    <button onclick="getUser()">Get Current User</button>
+        <span id="user"></span>
+    </div>
+<div><button onclick="logout()" >logout</button></div>
+
+</body>
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript">
+    function dologin() {
+        var username = document.getElementsByName("username")[0].value;
+        var password = document.getElementsByName("password")[0].value;
+//        ajax("/user/api/login",{username: username, password: password},function(){
+//            alert("ok")
+//        })
+        $(document).ajaxError(function(event, jqXhr, settings, throwsError){
+            var resp = jqXhr.responseText;
+
+        })
+        var loginData = {username: username, password: password};
+        $.ajax({
+            url: "/login",
+            data: JSON.stringify(loginData),
+            type: "POST",
+            dataType: "JSON",
+            processData:false,
+            contentType:"application/json",
+            success: function (data, status, setting) {
+
+                console.log(data);
+                if(data.code ===0) {
+                    alert("login ok")
+                    var token = setting.getResponseHeader("X-AUTH-TOKEN")
+                    localStorage.setItem("token",token);
+//            window.location.href="/main"
+                } else {
+                    alert("error:" + data.message);
+                }
+            },
+        });
+    }
+    function getUser(){
+        var token = localStorage.getItem("token");
+
+        $.ajax({
+            url: "/user/get",
+            headers: {"X-AUTH-TOKEN": token},
+            success: function (user) {
+                alert("fullname:"+user.fullname);
+            }
+        });
+    }
+    function logout(){
+        localStorage.removeItem("token");
+        window.location.href = "/logout"
+    }
+</script>
+</html>
