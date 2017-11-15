@@ -45,7 +45,7 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
 
         if ("XMLHttpRequest".equals(request.getHeader("x-requested-with"))){
             PrintWriter writer = response.getWriter();
-            writer.write("{\"code\": 0 , \"message\": \"ok\"}");
+            writer.write("{\"code\": 0 , \"message\": \"ok\" , \"token\":\""+token+"\"}");
             writer.flush();
             writer.close();
         } else {

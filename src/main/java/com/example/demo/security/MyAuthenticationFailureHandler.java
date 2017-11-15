@@ -38,8 +38,8 @@ public class MyAuthenticationFailureHandler implements AuthenticationFailureHand
             if(savedRequest!=null) {
                 response.sendRedirect(savedRequest.getRedirectUrl());
             }
-//            else
-//                response.sendRedirect(defaultFailureUrl);
+            else
+                response.sendRedirect(defaultFailureUrl);
         }
     }
 }

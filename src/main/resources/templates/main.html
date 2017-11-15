@@ -13,10 +13,18 @@
     <div >token:<span th:text = "${token}"></span></div>
     <div id = "main"></div>
     <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/ajax.js"></script>
     <script type="text/javascript">
 
-        $.get("/user/get", function(data,status){
-            $("#main")[0].innerHTML = JSON.stringify(data);
+        $.ajax({
+            url: "/user/get",
+            headers:{
+                "x-auth-token": localStorage.getItem("token")
+            },
+            type: "get",
+            success: function(data,status) {
+                $("#main")[0].innerHTML = JSON.stringify(data);
+            }
         })
 
     </script>

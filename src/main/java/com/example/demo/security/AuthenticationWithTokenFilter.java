@@ -13,6 +13,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.stereotype.Component;
@@ -31,32 +32,49 @@ import java.io.IOException;
  * Created by muyz on 2017/11/7.
  */
 
-public class RestFilter extends GenericFilterBean {
+public class AuthenticationWithTokenFilter extends AbstractAuthenticationProcessingFilter {
 
-    private final  Logger log = LoggerFactory.getLogger(RestFilter.class);
+    private final  Logger log = LoggerFactory.getLogger(AuthenticationWithTokenFilter.class);
 
-    @Autowired
     private TokenAuthenticationService tokenService;
 
-    public RestFilter(TokenAuthenticationService tokenAuthenticationService) {
+    public AuthenticationWithTokenFilter(String defaultFilterProcessesUrl) {
+        super(defaultFilterProcessesUrl);
+    }
+
+    public void setTokenService(TokenAuthenticationService tokenAuthenticationService){
         this.tokenService = tokenAuthenticationService;
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletResponse res = (HttpServletResponse) response;
+
+        if (!requiresAuthentication(req, res)) {
+            chain.doFilter(request, response);
+
+            return;
+        }
         HttpServletRequest httpRequest = (HttpServletRequest)request;
         HttpSession session = httpRequest.getSession(true);
         SecurityContext sc = (SecurityContext)session.getAttribute("SPRING_SECURITY_CONTEXT");
 
-        //----验证token,实际上还是从session取登录的用户信息，
         if (sc!=null && sc.getAuthentication()!=null) {
+            //----如果从session取登录的用户信息成功，就以此用户信息写入验证，
             Authentication authentication = sc.getAuthentication();
             SecurityContextHolder.getContext().setAuthentication(authentication);
             chain.doFilter(request, response);
-            return;
+
+        } else {
+            //-----没有session的，从头"x-auth-token"获得token，通过算法从token获取用户信息，达到验证的目的
+            SecurityContextHolder.getContext().setAuthentication(tokenService.getAuthentication(httpRequest));
+            chain.doFilter(request, response);
         }
-        //-----null或验证的用户信息写入，达到token验证的目的
-        SecurityContextHolder.getContext().setAuthentication(tokenService.getAuthentication(httpRequest));
-        chain.doFilter(request, response);
+    }
+
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+        return null;
     }
 }

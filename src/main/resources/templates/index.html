@@ -9,31 +9,47 @@
 </head>
 <body>
     <h1>Index</h1>
-    <form onsubmit="return false;">
-        username: <input name="username" value = "muyz"/>
-        password: <input name="password" value = "123"/>
-        <button type="submit" onclick="dologin()">AJAX 登录</button>
-    </form>
-    <form method="post" action="/login">
-        username: <input name="username" value = "muyz"/>
-        password: <input name="password" value = "123"/>
-        <button type="submit">Form 登录</button>
-    </form>
-    <div id="container">
-    <button onclick="getUser()">Get Current User</button>
-        <span id="user"></span>
-    </div>
-<div><button onclick="logout()" >logout</button></div>
+    <center>
+    <table width="600" style="margin-top: 25%">
+        <tr>
+            <td width="50%">
+            <div style="display: none">
+                <form onsubmit="return false;">
+                    username: <input name="username" value = "muyz"/>
+                    password: <input name="password" value = "123"/>
+                    <button type="submit" onclick="dologin()">AJAX 登录</button>
+                </form>
 
-</body>
+                <div id="container">
+                    <button onclick="getUser()">Get Current User</button>
+                    <span id="user"></span>
+                </div>
+                <form method="get" action="/user/get/muyz">
+                    <button type="submit">form getuser</button>
+                </form>
+                <div>
+                    <button onclick="logout()" >logout</button>
+                </div>
+            </div>
+            </td>
+            <td>
+                <form method="post" action="/login">
+                    username: <input name="username" value = "muyz"/>
+                    <br/>
+                    password: <input name="password" value = "123"/>
+                    <br/>
+                    <button type="submit">Form 登录</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+    </center>
 <script type="text/javascript" src="/static/js/jquery.min.js"></script>
 <script type="text/javascript">
     function dologin() {
         var username = document.getElementsByName("username")[0].value;
         var password = document.getElementsByName("password")[0].value;
-//        ajax("/user/api/login",{username: username, password: password},function(){
-//            alert("ok")
-//        })
+
         $(document).ajaxError(function(event, jqXhr, settings, throwsError){
             var resp = jqXhr.responseText;
 
@@ -76,4 +92,5 @@
         window.location.href = "/logout"
     }
 </script>
+</body>
 </html>

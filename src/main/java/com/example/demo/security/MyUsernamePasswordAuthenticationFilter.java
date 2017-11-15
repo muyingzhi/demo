@@ -52,37 +52,4 @@ public class MyUsernamePasswordAuthenticationFilter extends UsernamePasswordAuth
                 user.getUsername(), user.getPassword());
         return getAuthenticationManager().authenticate(loginToken);
     }
-
-//    @Override
-//    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-//        //----这里只要一个用户名即可
-//        final MyUserDetails authenticatedUser = new MyUserDetails(authResult.getName());
-//        final MyAuthentication userAuthentication = new MyAuthentication(true,authenticatedUser);
-//        //-----实际在向response的headers添加一个认证信息token
-//        tokenService.addAuthentication(response, userAuthentication);
-//        if ("XMLHttpRequest".equals(request.getHeader("x-requested-with"))) {
-//            response.getWriter().println("{\"code\":0}");
-//        }
-//        //-----写入,在授权阶段使用
-//        SecurityContextHolder.getContext().setAuthentication(userAuthentication);
-//    }
-
-//    @Override
-//    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-////        super.unsuccessfulAuthentication(request, response, failed);
-//        if ("XMLHttpRequest".equals(request.getHeader("x-requested-with"))){
-//            PrintWriter writer = response.getWriter();
-//            writer.write("{\"code\": -1 , \"message\": \""+failed.getMessage()+"\"}");
-//            writer.flush();
-//            writer.close();
-//        } else {
-//            RequestCache requestCache = new HttpSessionRequestCache();
-//            SavedRequest savedRequest = requestCache.getRequest(request,response);
-//            if(savedRequest!=null) {
-//                response.sendRedirect(savedRequest.getRedirectUrl());
-//            }else
-//                response.sendRedirect("");
-//
-//        }
-//    }
 }
