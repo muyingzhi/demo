@@ -1,6 +1,6 @@
 # SpringBoot Security 支持ajax登录方式的处理
 
-要实现标题之目标，有很多方案，比如奖表单登录和ajax登录分别采用不同的url
+* 要实现标题之目标，有很多方案，比如把表单登录和ajax登录分别采用不同的url。这里将严格安装springsecurity框架来实现。*
 
 ## 前提：只使用spring security完成身份认证和鉴权
 ## 定义规则：
