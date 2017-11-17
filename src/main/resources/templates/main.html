@@ -10,8 +10,23 @@
 <body>
 
     <a href="/logout">Logout</a>
-    <div >token:<span th:text = "${token}"></span></div>
+    <div >token:<span th:text = "${session.token}"></span></div>
     <div id = "main"></div>
+    <h1 th:inline="text">Hello [[${httpServletRequest}]]!
+    [[${user.username}]]</h1>
+    <div sec:authorize="${hasRole(user)}">我是user</div>
+    <div sec:authorize-url="/admin">/admin可访问</div>
+    <div sec:authorize-acl="${obj} :: '1,3'">
+        This will only be displayed if authenticated user has permissions "1" and "3"
+        on domain object referenced by context variable "obj".
+    </div>
+
+    <form onsubmit="return false;">
+        username: <input name="username" value = "jl"/>
+        password: <input name="password" value = "123"/>
+        fullname: <input name="fullname" value = "jingli"/>
+        <button type="submit" onclick="dosave()">保存</button>
+    </form>
     <script type="text/javascript" src="/static/js/jquery.min.js"></script>
     <script type="text/javascript" src="/static/js/ajax.js"></script>
     <script type="text/javascript">
@@ -24,9 +39,25 @@
             type: "get",
             success: function(data,status) {
                 $("#main")[0].innerHTML = JSON.stringify(data);
+                $("[name=username]").val(data.username);
+                $("[name=fullname]").val(data.fullname);
+                $("[name=password]").val(data.password);
             }
-        })
+        });
 
+        function dosave(){
+            var formdata = new FormData(document.getElementsByTagName("form")[0]);
+            $.ajax({
+                url: "/user/save",
+                data: formdata,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function(user){
+                    alert("ok")
+                }
+            })
+        }
     </script>
 </body>
 </html>
