@@ -27,3 +27,11 @@
 3. 自定义AjaxAuthenticationEntryPoint，用于未登录时ajax访问能够返回status=401而不是直接redirect到/login
 4. 自定义SecurityConfig，将以上自定义对象组合到http配置中，请配置可自由访问的路由，需要保护的路由等；
 
+# 关于鉴权
+首先需要对url做角色需求的定义，也可以说是定义，一个需要保护的url，需要什么角色（一个或多个）
+
+那么，当一个http request到达后，除了检查是否认证通过authentication，还要检查是否授权authorization；
+
+
+## 使用说明
+demo例程包括：redis ， mybatis ，cache等额外配置处理；
