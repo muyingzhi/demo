@@ -23,10 +23,9 @@ import java.io.PrintWriter;
  */
 @Component
 public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-
     public MyAuthenticationSuccessHandler() {
-
     }
+
     public MyAuthenticationSuccessHandler(String successfulUrl, TokenAuthenticationService tokenService) {
         super(successfulUrl);
         this.tokenService = tokenService;
@@ -46,6 +45,7 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
         SecurityContextHolder.getContext().setAuthentication(userAuthentication);
 
         if ("XMLHttpRequest".equals(request.getHeader("x-requested-with"))){
+            // -- ajax请求，放回json
             PrintWriter writer = response.getWriter();
             writer.write("{\"code\": 0 , \"message\": \"ok\" , \"token\":\""+token+"\"}");
             writer.flush();
@@ -55,15 +55,9 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
             if (session!=null){
                 session.setAttribute("token",token);
             }
+            //---其它的，按框架方式执行
             super.onAuthenticationSuccess(request, response, authentication);
-//            RequestCache requestCache = new HttpSessionRequestCache();
-//            SavedRequest savedRequest = requestCache.getRequest(request,response);
-//            request.setAttribute("token",token);
-//            if(savedRequest!=null) {
-//                response.sendRedirect(savedRequest.getRedirectUrl());
-//            }
-//            else
-//                response.sendRedirect(this.getDefaultTargetUrl());
+
         }
     }
 }

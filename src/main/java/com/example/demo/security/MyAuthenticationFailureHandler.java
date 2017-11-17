@@ -6,7 +6,6 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
-import org.springframework.util.AntPathMatcher;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -26,24 +25,14 @@ public class MyAuthenticationFailureHandler extends SimpleUrlAuthenticationFailu
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
 
         if ("XMLHttpRequest".equals(request.getHeader("x-requested-with"))){
+            //ajax请求的，返回json
             PrintWriter writer = response.getWriter();
             writer.write("{\"code\": -1 , \"message\": \""+exception.getMessage()+"\"}");
             writer.flush();
             writer.close();
         } else {
+            //----否则仍然按框架的方案来实现
             super.onAuthenticationFailure(request, response, exception);
-//            request.setAttribute("exception", exception);
-//
-//            RequestCache requestCache = new HttpSessionRequestCache();
-//            SavedRequest savedRequest = requestCache.getRequest(request,response);
-//
-//            if(savedRequest!=null) {
-//                response.sendRedirect(savedRequest.getRedirectUrl());
-////                request.getRequestDispatcher(savedRequest.getRedirectUrl()).forward(request,response);
-//            }
-//            else
-//                response.sendRedirect(defaultFailureUrl);
-////                request.getRequestDispatcher(defaultFailureUrl).forward(request, response);
         }
     }
 }

@@ -17,7 +17,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
+import org.springframework.security.web.access.intercept.DefaultFilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -25,6 +27,9 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -39,13 +44,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		//----登录的filter
 		MyUsernamePasswordAuthenticationFilter upFilter = new MyUsernamePasswordAuthenticationFilter(tokenAuthenticationService);
 		upFilter.setAuthenticationManager(this.authenticationManager());
 		upFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
 		upFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler());
 		//-----支持token的验证
-		AuthenticationWithTokenFilter withTokenFilter = new AuthenticationWithTokenFilter("/user/**");
+		AuthenticationWithTokenFilter withTokenFilter =
+				new AuthenticationWithTokenFilter("/user/**");
 		withTokenFilter.setTokenService(tokenAuthenticationService);
+		//-----
+		FilterSecurityInterceptor securityInterceptor = new MyFilterSecurityInterceptor(new AntPathRequestMatcher("/user/**"));
+//		securityInterceptor.setSecurityMetadataSource(new DefaultFilterInvocationSecurityMetadataSource());
 		http
 		.httpBasic().disable()
 		.authorizeRequests()
@@ -62,11 +72,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				.permitAll().and()
 		.exceptionHandling().defaultAuthenticationEntryPointFor(
 				new AjaxAuthenticationEntryPoint(),
-				new AjaxRequestMatcher()).and()
-		.csrf()
-			.disable()
+				new AjaxRequestMatcher())
+				.and().authorizeRequests().antMatchers("/user/**").hasRole("user").and()
+		.csrf().disable()
 		.addFilterBefore(upFilter,UsernamePasswordAuthenticationFilter.class)
 		.addFilterAfter(withTokenFilter, SecurityContextHolderAwareRequestFilter.class)
+		.addFilterBefore(securityInterceptor, FilterSecurityInterceptor.class)
 		;
 	}
 	@Autowired
@@ -83,7 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	}
 	@Bean
 	public AuthenticationFailureHandler authenticationFailureHandler(){
-		String failureUrl = "/login";
+		String failureUrl = "/login?error";//加入error是为login.html处理异常而用
 		return new MyAuthenticationFailureHandler(failureUrl);
 	}
 	@Bean
