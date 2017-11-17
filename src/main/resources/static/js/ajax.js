@@ -30,12 +30,17 @@
             alert("请登录后再访问")
             window.location.href = "/";
             return;
+        }else if(jqxhr.status==403){
+            alert("403，您的权限禁止此访问");
+            return;
         }else if(jqxhr.status==404){
             alert("404，请求无效地址:status="+jqxhr.status+"\n"+settings.url);
             return;
         } else if(jqxhr.status==500){
             alert("500，服务端异常:status="+jqxhr.status+"\n"+settings.url);
             return;
+        } else {
+            alert("异常："+resp);
         }
         try{
             var result = $.parseJSON(resp);
