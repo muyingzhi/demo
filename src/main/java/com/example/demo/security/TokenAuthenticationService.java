@@ -4,6 +4,7 @@ import com.example.demo.user.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,13 +21,12 @@ public class TokenAuthenticationService {
 
     private final TokenHandler tokenHandler;
 
-    @Autowired
     public TokenAuthenticationService(@Value("${token.secret}") String secret) {
         tokenHandler = new TokenHandler(DatatypeConverter.parseBase64Binary(secret));
     }
 
-    public String addAuthentication(HttpServletResponse response, MyAuthentication authentication) {
-        final MyUserDetails user = authentication.getDetails();
+    public String addAuthentication(HttpServletResponse response, Authentication authentication) {
+        final MyUserDetails user = (MyUserDetails)authentication.getDetails();
         user.setExpires(System.currentTimeMillis() + TEN_DAYS);
         String token = tokenHandler.createTokenForUser(user);
         response.addHeader(AUTH_HEADER_NAME, token);

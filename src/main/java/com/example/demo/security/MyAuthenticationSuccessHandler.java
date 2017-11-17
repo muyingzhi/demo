@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -20,14 +22,14 @@ import java.io.PrintWriter;
  * Created by muyz on 2017/11/13.
  */
 @Component
-public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-    private String successfulUrl ;
+public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+
     public MyAuthenticationSuccessHandler() {
 
     }
     public MyAuthenticationSuccessHandler(String successfulUrl, TokenAuthenticationService tokenService) {
+        super(successfulUrl);
         this.tokenService = tokenService;
-        this.successfulUrl = successfulUrl;
     }
 
     private TokenAuthenticationService tokenService;
@@ -49,16 +51,19 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
             writer.flush();
             writer.close();
         } else {
-            request.setAttribute("token", token);
-
-            RequestCache requestCache = new HttpSessionRequestCache();
-            SavedRequest savedRequest = requestCache.getRequest(request,response);
-
-            if(savedRequest!=null) {
-                response.sendRedirect(savedRequest.getRedirectUrl());
+            HttpSession session = request.getSession(false);
+            if (session!=null){
+                session.setAttribute("token",token);
             }
-            else
-                response.sendRedirect(successfulUrl);
+            super.onAuthenticationSuccess(request, response, authentication);
+//            RequestCache requestCache = new HttpSessionRequestCache();
+//            SavedRequest savedRequest = requestCache.getRequest(request,response);
+//            request.setAttribute("token",token);
+//            if(savedRequest!=null) {
+//                response.sendRedirect(savedRequest.getRedirectUrl());
+//            }
+//            else
+//                response.sendRedirect(this.getDefaultTargetUrl());
         }
     }
 }

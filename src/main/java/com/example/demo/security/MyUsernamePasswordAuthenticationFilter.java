@@ -14,6 +14,7 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -38,7 +39,8 @@ public class MyUsernamePasswordAuthenticationFilter extends UsernamePasswordAuth
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         MyUserDetails user = null;
-        if ("application/x-www-form-urlencoded".equals(request.getHeader("content-type"))){
+        RequestHeaderRequestMatcher matcher = new RequestHeaderRequestMatcher("content-type","application/x-www-form-urlencoded");
+        if (matcher.matches(request)){
             user = new MyUserDetails(request.getParameter("username"),request.getParameter("password"));
         } else {
             try {
