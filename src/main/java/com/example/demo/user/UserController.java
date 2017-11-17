@@ -32,4 +32,10 @@ public class UserController {
 		return service.findByUsername(userName);
 	}
 
+	@RequestMapping("/save")
+	public @ResponseBody User save(User user){
+//		user.setId(1l);
+		service.save(user);
+		return user;
+	}
 }

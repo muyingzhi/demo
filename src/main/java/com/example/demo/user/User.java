@@ -1,9 +1,11 @@
 package com.example.demo.user;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable{
 
 	private Long id;
-	private String username;
+	public String username;
 	private String password;
 	private String fullname;
 	private String deptCode;
@@ -51,4 +53,5 @@ public class User {
 	public String toString(){
 		return String.format("用户：%s ID= %d }",this.getFullname(),this.getId());
 	}
+
 }

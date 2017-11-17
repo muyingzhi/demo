@@ -2,7 +2,9 @@ package com.example.demo.user;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 
+import com.example.demo.user.mapper.UserAuthority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -30,7 +32,10 @@ public class MyUserDetails implements UserDetails{
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
-		return null;
+		UserAuthority ua = new UserAuthority("ADMIN");
+		Collection<UserAuthority> c = new HashSet<UserAuthority>();
+		c.add(ua);
+		return c;
 	}
 
 	public long getExpires() {

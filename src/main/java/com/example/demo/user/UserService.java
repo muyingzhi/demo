@@ -2,6 +2,7 @@ package com.example.demo.user;
 
 import com.example.demo.user.mapper.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,6 +29,7 @@ public class UserService implements UserDetailsService{
 		if (dbUser!=null){
 			user.setId(dbUser.getId());
 		}
+		System.out.println(user.getUsername());
 		int rtn = dao.update(user);
 		if (rtn ==0){
 			rtn = dao.insert(user);
