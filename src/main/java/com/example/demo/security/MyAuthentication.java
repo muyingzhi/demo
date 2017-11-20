@@ -1,9 +1,10 @@
 package com.example.demo.security;
 
-import com.example.demo.user.MyUserDetails;
+import com.example.demo.auth.service.MyUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -12,15 +13,19 @@ import java.util.Collection;
 public class MyAuthentication implements Authentication {
     private boolean authenticated = false;
     private MyUserDetails userDetails;
-
+    private Collection<MyGrantedAuthority> authorities = null;
     public MyAuthentication(boolean authenticated, MyUserDetails userDetails) {
         this.authenticated = authenticated;
         this.userDetails = userDetails;
+        authorities = new ArrayList<MyGrantedAuthority>();
+        MyGrantedAuthority ga = new MyGrantedAuthority();
+        ga.setAuthority("ROLE_ADMIN");
+        authorities.add(ga);
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.authorities;
     }
 
     @Override

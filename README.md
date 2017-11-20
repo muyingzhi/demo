@@ -35,3 +35,9 @@
 
 ## 使用说明
 demo例程包括：redis ， mybatis ，cache等额外配置处理；
+
+## 总结
+jwt token的支持需要以下步骤：
+1 ajax登录时，成功返回token；
+2 过滤器验证有token的token值，通过验证怎在securityContext写上验证信息；
+3 有验证信息，才可以通过security的filter；

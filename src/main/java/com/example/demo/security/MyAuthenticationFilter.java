@@ -1,35 +1,24 @@
 package com.example.demo.security;
 
-import com.example.demo.user.MyUserDetails;
+import com.example.demo.auth.service.MyUserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-import org.springframework.security.web.savedrequest.RequestCache;
-import org.springframework.security.web.savedrequest.SavedRequest;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
 
 /**
  * Created by muyz on 2017/11/13.
  */
-public class MyUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class MyAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    public MyUsernamePasswordAuthenticationFilter(TokenAuthenticationService tokenAuthenticationService) {
+    public MyAuthenticationFilter(TokenAuthenticationService tokenAuthenticationService) {
         super();
         this.tokenService = tokenAuthenticationService;
     }

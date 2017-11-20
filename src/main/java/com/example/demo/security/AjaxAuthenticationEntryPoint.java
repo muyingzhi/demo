@@ -2,6 +2,7 @@ package com.example.demo.security;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +23,11 @@ public class AjaxAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException arg2)
             throws IOException, ServletException {
+        System.out.println("--------处理了异常"+arg2.getMessage());
+
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
                 "Unauthorized.");
+
 
     }
 

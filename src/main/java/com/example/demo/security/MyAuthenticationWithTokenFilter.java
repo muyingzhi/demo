@@ -1,23 +1,12 @@
 package com.example.demo.security;
 
-import com.example.demo.user.MyUserDetails;
-import com.example.demo.user.User;
-import groovy.util.logging.Commons;
-import org.apache.commons.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -32,13 +21,13 @@ import java.io.IOException;
  * Created by muyz on 2017/11/7.
  */
 
-public class AuthenticationWithTokenFilter extends AbstractAuthenticationProcessingFilter {
+public class MyAuthenticationWithTokenFilter extends AbstractAuthenticationProcessingFilter {
 
-    private final  Logger log = LoggerFactory.getLogger(AuthenticationWithTokenFilter.class);
+    private final  Logger log = LoggerFactory.getLogger(MyAuthenticationWithTokenFilter.class);
 
     private TokenAuthenticationService tokenService;
 
-    public AuthenticationWithTokenFilter(String defaultFilterProcessesUrl) {
+    public MyAuthenticationWithTokenFilter(String defaultFilterProcessesUrl) {
         super(defaultFilterProcessesUrl);
     }
 

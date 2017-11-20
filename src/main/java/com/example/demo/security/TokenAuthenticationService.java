@@ -1,10 +1,8 @@
 package com.example.demo.security;
 
-import com.example.demo.user.MyUserDetails;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.auth.service.MyUserDetails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;

@@ -1,9 +1,11 @@
 package com.example.demo.security;
 
+import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
@@ -21,35 +23,40 @@ import java.io.IOException;
 public class MyFilterSecurityInterceptor extends FilterSecurityInterceptor {
     private RequestMatcher requestMatcher;
 
-    public MyFilterSecurityInterceptor(RequestMatcher requestMatcher) {
+    public MyFilterSecurityInterceptor(RequestMatcher requestMatcher,
+                                       FilterInvocationSecurityMetadataSource metadataSource,
+                                       AccessDecisionManager accessDecisionManager) {
+
         this.requestMatcher = requestMatcher;
+        super.setSecurityMetadataSource(metadataSource);
+        super.setAccessDecisionManager(accessDecisionManager);
     }
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-//        super.doFilter(request, response, chain);
-        System.out.println("interceptor do filter ....");
-
-
-        if (requestMatcher.matches((HttpServletRequest)request)){
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Object obj = authentication.getDetails();
-            if (!(obj instanceof UserDetails)) {
-                return;
-            }
-            UserDetails user = (UserDetails)obj;
-            //----用户拥有的角色
-            user.getAuthorities();
-            //----当前request需要的角色，
-            //-------在cache里保存所有有权限要求的url
-            //-------request的url是否在cache里有对应
-            //-------找出需要的角色
-
-            //----判断是否用户角色包含所需角色
-            //-------不完全包含，则禁止访问
+//    @Override
+//    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+////        super.doFilter(request, response, chain);
+//        System.out.println("interceptor do filter ....");
+//
+//
+//        if (requestMatcher.matches((HttpServletRequest)request)){
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//            Object obj = authentication.getDetails();
+//            if (!(obj instanceof UserDetails)) {
+//                return;
+//            }
+//            UserDetails user = (UserDetails)obj;
+//            //----用户拥有的角色
+//            user.getAuthorities();
+//            //----当前request需要的角色，
+//            //-------在cache里保存所有有权限要求的url
+//            //-------request的url是否在cache里有对应
+//            //-------找出需要的角色
+//
+//            //----判断是否用户角色包含所需角色
+//            //-------不完全包含，则禁止访问
 //            throw new AccessDeniedException("禁止访问");
-        }
-        chain.doFilter(request, response);
-
-    }
+//        }
+//        chain.doFilter(request, response);
+//
+//    }
 }

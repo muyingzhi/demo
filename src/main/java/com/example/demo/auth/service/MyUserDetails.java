@@ -1,10 +1,11 @@
-package com.example.demo.user;
+package com.example.demo.auth.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 
-import com.example.demo.user.mapper.UserAuthority;
+import com.example.demo.auth.User;
+import com.example.demo.security.MyGrantedAuthority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -32,8 +33,9 @@ public class MyUserDetails implements UserDetails{
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
-		UserAuthority ua = new UserAuthority("ADMIN");
-		Collection<UserAuthority> c = new HashSet<UserAuthority>();
+		MyGrantedAuthority ua = new MyGrantedAuthority();
+		ua.setAuthority("ROLE_ADMIN");
+		Collection<GrantedAuthority> c = new ArrayList<GrantedAuthority>();
 		c.add(ua);
 		return c;
 	}
