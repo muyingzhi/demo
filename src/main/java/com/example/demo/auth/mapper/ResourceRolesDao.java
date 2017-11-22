@@ -17,6 +17,7 @@ public interface ResourceRolesDao {
 
     int update(ResourceRoles obj);
 
+    @Cacheable(cacheNames = "rrs",key="#root.methodName")
     Collection<ResourceRoles> getAll();
 
     int deleteById(Long id);

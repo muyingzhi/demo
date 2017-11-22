@@ -37,7 +37,6 @@ public class ResourceRoleService implements Serializable {
         rrs.setUrlPattern(urlPattern);
         return resourceRolesDao.update(rrs);
     }
-
     public Collection<ResourceRoles> getAll() {
 //        if (rrsMap == null){
 //            rrsMap = new HashMap<String,Object>();
