@@ -1,7 +1,7 @@
 package com.example.demo.auth.web;
 
 import com.example.demo.auth.User;
-import com.example.demo.auth.service.MyUserDetails;
+import com.example.demo.auth.MyUserDetails;
 import com.example.demo.auth.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -34,7 +34,6 @@ public class UserController {
 
 	@RequestMapping("/save")
 	public @ResponseBody User save(User user){
-//		user.setId(1l);
 		service.save(user);
 		return user;
 	}

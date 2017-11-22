@@ -10,10 +10,9 @@
 <body>
 
     <a href="/logout">Logout</a>
-    <div >token:<span th:text = "${session.token}"></span></div>
     <div id = "main"></div>
-    <h1 th:inline="text">Hello [[${httpServletRequest}]]!
-    [[${user.username}]]</h1>
+    <h1 th:inline="text">Hello [[${user.username}]]</h1>
+
     <div sec:authorize="${hasRole(user)}">我是user</div>
     <div sec:authorize-url="/admin">/admin可访问</div>
     <div sec:authorize-acl="${obj} :: '1,3'">

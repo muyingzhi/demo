@@ -1,6 +1,6 @@
 package com.example.demo.security;
 
-import com.example.demo.auth.service.MyUserDetails;
+import com.example.demo.auth.MyUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -29,15 +29,9 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
     private TokenAuthenticationService tokenService;
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        //----这里只要一个用户名即可
-        final MyUserDetails authenticatedUser = new MyUserDetails(authentication.getName());
-        final MyAuthentication userAuthentication = new MyAuthentication(true,authenticatedUser);
 
         //-----实际在向response的headers添加一个认证信息token
-        String token = tokenService.addAuthentication(response, userAuthentication);
-
-        //-----写入,在授权阶段使用
-        SecurityContextHolder.getContext().setAuthentication(userAuthentication);
+        String token = tokenService.addAuthentication(response, authentication);
 
         if ("XMLHttpRequest".equals(request.getHeader("x-requested-with"))){
             // -- ajax请求，放回json
@@ -46,10 +40,6 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
             writer.flush();
             writer.close();
         } else {
-            HttpSession session = request.getSession(false);
-            if (session!=null){
-                session.setAttribute("token",token);
-            }
             //---其它的，按框架方式执行
             super.onAuthenticationSuccess(request, response, authentication);
 

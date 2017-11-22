@@ -1,13 +1,16 @@
 package com.example.demo.security;
 
-import com.example.demo.auth.service.MyUserDetails;
+import com.example.demo.auth.MyUserDetails;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.DatatypeConverter;
+import java.util.Date;
 
 /**
  * Created by muyz on 2017/11/9.
@@ -24,8 +27,8 @@ public class TokenAuthenticationService {
     }
 
     public String addAuthentication(HttpServletResponse response, Authentication authentication) {
-        final MyUserDetails user = (MyUserDetails)authentication.getDetails();
-        user.setExpires(System.currentTimeMillis() + TEN_DAYS);
+        final MyUserDetails user = (MyUserDetails)authentication.getPrincipal();
+        user.setExpires((new Date()).getTime()+TEN_DAYS);
         String token = tokenHandler.createTokenForUser(user);
         response.addHeader(AUTH_HEADER_NAME, token);
         return token;
@@ -36,7 +39,7 @@ public class TokenAuthenticationService {
         if (token != null) {
             final MyUserDetails user = tokenHandler.parseUserFromToken(token);
             if (user != null) {
-                return new MyAuthentication(true, user);
+                return new UsernamePasswordAuthenticationToken( user, user.getPassword(), user.getAuthorities());
             }
         }
         return null;

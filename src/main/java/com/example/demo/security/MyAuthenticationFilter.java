@@ -1,6 +1,6 @@
 package com.example.demo.security;
 
-import com.example.demo.auth.service.MyUserDetails;
+import com.example.demo.auth.MyUserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,9 +38,10 @@ public class MyAuthenticationFilter extends UsernamePasswordAuthenticationFilter
                 e.printStackTrace();
             }
         }
-        //-----组织验证用的token
-        final UsernamePasswordAuthenticationToken loginToken = new UsernamePasswordAuthenticationToken(
+        //-----组织验证用的Authentication
+        final UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
                 user.getUsername(), user.getPassword());
-        return getAuthenticationManager().authenticate(loginToken);
+        super.setDetails(request, authRequest);
+        return getAuthenticationManager().authenticate(authRequest);
     }
 }

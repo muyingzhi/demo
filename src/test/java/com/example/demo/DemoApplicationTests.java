@@ -10,8 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.example.demo.user.User;
-import com.example.demo.user.UserService;
+import com.example.demo.auth.User;
+import com.example.demo.auth.service.UserService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

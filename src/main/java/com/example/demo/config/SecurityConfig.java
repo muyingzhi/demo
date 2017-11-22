@@ -59,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				.logoutSuccessUrl("/")
 		.addLogoutHandler(new MyLogoutHandler())
 				.permitAll().and()
-		.exceptionHandling().defaultAuthenticationEntryPointFor(// @Todo ??????
+		.exceptionHandling().defaultAuthenticationEntryPointFor(// ajax请求的异常处理
 				new AjaxAuthenticationEntryPoint(),
 				new AjaxRequestMatcher())
 		.and().authorizeRequests()
@@ -70,13 +70,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		.addFilterBefore(securityInterceptor, FilterSecurityInterceptor.class)
 		;
 	}
-	@Autowired
-	private UserDetailsService userDetailsService;
 	@Bean
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
+
+	@Autowired
+	private UserDetailsService userDetailsService;
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService);

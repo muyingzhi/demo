@@ -1,18 +1,20 @@
-package com.example.demo.auth.service;
+package com.example.demo.auth;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
-import com.example.demo.auth.User;
 import com.example.demo.security.MyGrantedAuthority;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 public class MyUserDetails implements UserDetails{
 	private long expires;
 	private String username;
 	private String password;
+	private Collection<MyGrantedAuthority> authorities;
 	private boolean enabled;
 	private boolean accountNonLocked;
 	private boolean accountNonExpired;
@@ -30,14 +32,17 @@ public class MyUserDetails implements UserDetails{
 		this.password = user.getPassword();
 	}
 
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setAuthorities(Collection<MyGrantedAuthority> grantedAuthorities) {
+		this.authorities = grantedAuthorities;
+	}
+
 	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		MyGrantedAuthority ua = new MyGrantedAuthority();
-		ua.setAuthority("ROLE_ADMIN");
-		Collection<GrantedAuthority> c = new ArrayList<GrantedAuthority>();
-		c.add(ua);
-		return c;
+	public Collection<MyGrantedAuthority> getAuthorities() {
+		return authorities;
 	}
 
 	public long getExpires() {

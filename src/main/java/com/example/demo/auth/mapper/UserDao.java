@@ -1,12 +1,9 @@
-package com.example.demo.user.mapper;
+package com.example.demo.auth.mapper;
 
-import com.example.demo.user.User;
-import org.apache.ibatis.annotations.Insert;
+import com.example.demo.auth.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 
 @Mapper
@@ -17,6 +14,7 @@ public interface UserDao {
 	public User findByUsername(@Param("username")String username);
 
 	public int insert(User user);
+
 	@CacheEvict(value = "user" , key = "#a0.username")
 	public int update(User user);
 }

@@ -11,18 +11,18 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
  * Created by muyz on 2017/11/16.
  */
 @Configuration
-@EnableRedisHttpSession
+//@EnableRedisHttpSession
 
 public class RedisConfig {
     @Bean
     public JedisConnectionFactory connectionFactory(){
         return new JedisConnectionFactory();
     }
-    @Bean
-    public RedisTemplate<String, String> redisTemplate(JedisConnectionFactory factory){
-        final StringRedisTemplate template = new StringRedisTemplate(factory);
-
-//        template.setValueSerializer(new Jackson2JsonRedisSerializer<User>(User.class));
-        return template;
-    }
+//    @Bean
+//    public RedisTemplate<String, String> redisTemplate(JedisConnectionFactory factory){
+//        final StringRedisTemplate template = new StringRedisTemplate(factory);
+//
+////        template.setValueSerializer(new Jackson2JsonRedisSerializer<User>(User.class));
+//        return template;
+//    }
 }

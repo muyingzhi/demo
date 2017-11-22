@@ -22,9 +22,9 @@
 * （五）无session访问可以通jwt方式实现，即服务端生成加密的token，客户端登录成功后获取token并保存（localstrage），再次http请求需要带上token；服务端解析token，进行验证；验证成功将认证结果写入SecurityHolder，使security的filterchain能够正确运作；这也解决了（四）所需，只要客户端还保留有token，那么带着token的http访问即可通关filterchain的验证。
 
 ## 在springsecurity框架下的实现：
-1. 自定义UsernamePasswordAuthenticationFilter，并引入jwt的token算法，自定义的successHandler、failureHandler，实现登录的处理，ajax请求成功后返回内容带有token，form请求成功后设置request.setAttribute(“token”,token)；
-2. 自定义AuthenticationWithTokenFilter，支持没有session验证信息情况下通过jwt的token实现验证；
-3. 自定义AjaxAuthenticationEntryPoint，用于未登录时ajax访问能够返回status=401而不是直接redirect到/login
+1. 自定义UsernamePasswordAuthenticationFilter，自定义的successHandler、failureHandler，实现登录的处理，ajax请求成功后返回内容带有token（引入jwt的token算法），form请求成功不提供token；
+2. 自定义AuthenticationWithTokenFilter，支持没有session验证信息情况下通过token实现验证；
+3. 自定义AjaxAuthenticationEntryPoint，用于未登录时ajax访问（没有sessionid，没有token）能够返回status=401（而不是直接redirect到/login）
 4. 自定义SecurityConfig，将以上自定义对象组合到http配置中，请配置可自由访问的路由，需要保护的路由等；
 
 # 关于鉴权
@@ -37,7 +37,13 @@
 demo例程包括：redis ， mybatis ，cache等额外配置处理；
 
 ## 总结
-jwt token的支持需要以下步骤：
-1 ajax登录时，成功返回token；
-2 过滤器验证有token的token值，通过验证怎在securityContext写上验证信息；
-3 有验证信息，才可以通过security的filter；
+### jwt token的支持需要以下步骤：
+* 1 ajax登录时，成功返回header中包括token；
+* 2 过滤器，当session为空，那么通过验证header的token值（token逆向算法）并在securityContext写上验证信息；
+* 3 有验证信息，可以通过security的filter；
+### Authentication
+* 1 principal 与 details，未认证时principal是username，通过认证是UserDetails；details是额外信息；
+### http session cache 与 其它缓存不同
+* 1 http session cache可以通过spring.session.store-type=JDBC/Redis/HashMap等定义
+* 2 @Cacheable则需要 增加@EnableCaching，当增加了spring data redis配置后，即可存入redis
+* 3 httpsession 写入redis，加上@EnabledRedisHttpSession,并增加bean ：RedisTemplate

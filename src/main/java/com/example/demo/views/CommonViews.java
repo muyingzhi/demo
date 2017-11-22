@@ -23,7 +23,8 @@ public class CommonViews {
 //    }
     @RequestMapping("/main")
     public String main(ServletRequest request, ServletResponse response, Map<String, Object> map){
-        map.put("user",SecurityContextHolder.getContext().getAuthentication().getDetails());
+        map.put("user",SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
         return "main";
     }
 //    @RequestMapping("/login")

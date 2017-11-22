@@ -9,7 +9,7 @@ import java.util.Collection;
 /**
  * Created by muyz on 2017/11/17.
  */
-@EnableCaching
+
 public class MyCacheManager implements CacheManager{
     @Override
     public Cache getCache(String name) {

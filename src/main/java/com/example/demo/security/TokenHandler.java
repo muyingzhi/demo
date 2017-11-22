@@ -15,7 +15,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
-import com.example.demo.auth.service.MyUserDetails;
+import com.example.demo.auth.MyUserDetails;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
