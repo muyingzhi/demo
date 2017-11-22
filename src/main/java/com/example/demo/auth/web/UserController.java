@@ -20,7 +20,7 @@ public class UserController {
 	public @ResponseBody Object get(){
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if(authentication!=null){
-			MyUserDetails user = (MyUserDetails) authentication.getDetails();
+			MyUserDetails user = (MyUserDetails) authentication.getPrincipal();
 			User dbUser = service.findByUsername(user.getUsername());
 			return dbUser;
 		}
