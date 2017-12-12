@@ -1,10 +1,9 @@
 package com.example.demo.security;
 
-import com.example.demo.auth.MyUserDetails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,9 +26,10 @@ public class TokenAuthenticationService {
     }
 
     public String addAuthentication(HttpServletResponse response, Authentication authentication) {
-        final MyUserDetails user = (MyUserDetails)authentication.getPrincipal();
-        user.setExpires((new Date()).getTime()+TEN_DAYS);
-        String token = tokenHandler.createTokenForUser(user);
+        final User user = (User)authentication.getPrincipal();
+        MyUserDetails myUser = new MyUserDetails(user);
+        myUser.setExpires((new Date()).getTime()+TEN_DAYS);
+        String token = tokenHandler.createTokenForUser(myUser);
         response.addHeader(AUTH_HEADER_NAME, token);
         return token;
     }

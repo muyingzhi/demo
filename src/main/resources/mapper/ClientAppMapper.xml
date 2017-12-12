@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.auth.mapper.ClientAppDao">
+
+    <select id="getAll"   resultType="com.example.demo.auth.ClientApp">
+        select * from t_auth_client_app where state = 1
+    </select>
+    <select id="getByClientId"   resultType="com.example.demo.auth.ClientApp">
+        select * from t_auth_client_app where state = 1 and app_id = #{clientId}
+    </select>
+
+    <insert id="insert" parameterType="com.example.demo.auth.ClientApp" flushCache="true"
+            useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO t_auth_client_app(app_name,app_id,app_secret,create_date,state)
+        VALUES (#{appName},#{appId},#{appSecret},now(),1)
+    </insert>
+
+    <update id="delete" parameterType="com.example.demo.auth.ClientApp" flushCache="true">
+        UPDATE t_auth_client_app
+        SET state= 0
+        WHERE app_id = #{appId}
+    </update>
+
+    <update id="update" parameterType="com.example.demo.auth.ClientApp" flushCache="true">
+        update T_AUTH_CLIENT_APP
+        SET app_name = #{appName}, app_secret = #{appSecret}
+        WHERE id = #{id}
+    </update>
+
+
+
+</mapper>

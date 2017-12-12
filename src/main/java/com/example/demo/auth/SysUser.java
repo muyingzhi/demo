@@ -2,17 +2,17 @@ package com.example.demo.auth;
 
 import java.io.Serializable;
 
-public class User implements Serializable{
+public class SysUser implements Serializable{
 
 	private Long id;
 	public String username;
 	private String password;
 	private String fullname;
 	private String deptCode;
-	public User(){
+	public SysUser(){
 
 	}
-	public User(String username,String password,String fullname,String deptCode){
+	public SysUser(String username, String password, String fullname, String deptCode){
 		this.username = username;
 		this.password = password;
 		this.fullname = fullname;

@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import com.example.demo.auth.service.UserService;
 import com.example.demo.security.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationProcessingFilter;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -28,13 +30,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	private FilterInvocationSecurityMetadataSource metadataSource;
 	@Autowired
 	private AccessDecisionManager accessDecisionManager;
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		//----登录的filter
-		MyAuthenticationFilter upFilter = new MyAuthenticationFilter(tokenAuthenticationService);
-		upFilter.setAuthenticationManager(this.authenticationManager());
-		upFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
-		upFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler());
+		OAuth2AuthenticationProcessingFilter oauth2Filter = new OAuth2AuthenticationProcessingFilter();
+		oauth2Filter.setAuthenticationManager(this.authenticationManager());
+
+
+		//----认证filter
+		MyAuthenticationFilter authenticationFilter = new MyAuthenticationFilter(tokenAuthenticationService);
+		authenticationFilter.setAuthenticationManager(this.authenticationManager());
+		authenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
+		authenticationFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler());
 		//-----支持token的验证
 		MyAuthenticationWithTokenFilter withTokenFilter =
 				new MyAuthenticationWithTokenFilter("/user/**");
@@ -53,8 +60,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				.antMatchers("/static/**").permitAll()
 			.anyRequest().authenticated()
 			.and()
-		.formLogin().loginPage("/login")
-				.permitAll().and()
+//		.formLogin().loginPage("/login")
+//				.permitAll().and()
 		.logout().logoutUrl("/logout")
 				.logoutSuccessUrl("/")
 		.addLogoutHandler(new MyLogoutHandler())
@@ -63,9 +70,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				new AjaxAuthenticationEntryPoint(),
 				new AjaxRequestMatcher())
 		.and().authorizeRequests()
-		.antMatchers("/user/**").hasRole("user").and()
-		.csrf().disable()
-		.addFilterBefore(upFilter,UsernamePasswordAuthenticationFilter.class)
+		.and().csrf().disable()
+//		.addFilterBefore(oauth2Filter,UsernamePasswordAuthenticationFilter.class)
+		.addFilterBefore(authenticationFilter,UsernamePasswordAuthenticationFilter.class)
 		.addFilterAfter(withTokenFilter, SecurityContextHolderAwareRequestFilter.class)
 		.addFilterBefore(securityInterceptor, FilterSecurityInterceptor.class)
 		;
@@ -76,11 +83,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		return super.authenticationManagerBean();
 	}
 
-	@Autowired
-	private UserDetailsService userDetailsService;
+	@Bean
+	public UserDetailsService userDetailsService(){
+		return new UserService();
+	}
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService);
+		auth.userDetailsService(userDetailsService());
 
 	}
 	@Bean

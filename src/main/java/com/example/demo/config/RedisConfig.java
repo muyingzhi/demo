@@ -23,10 +23,6 @@ public class RedisConfig {
     }
     @Bean
     public RedisTemplate redisTemplate(JedisConnectionFactory factory){
-//        final StringRedisTemplate template = new StringRedisTemplate(factory);
-//
-////        template.setValueSerializer(new Jackson2JsonRedisSerializer<User>(User.class));
-//        return template;
         final StringRedisTemplate template = new StringRedisTemplate(factory);
 
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());

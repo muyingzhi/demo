@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.example.demo.auth.User;
+import com.example.demo.auth.SysUser;
 import com.example.demo.auth.service.UserService;
 
 @RunWith(SpringRunner.class)
@@ -23,7 +23,7 @@ public class DemoApplicationTests {
 	}
 	@Test
 	public void userSave(){
-		User user = new User("muyz","123","穆医生","内科");
+		SysUser user = new SysUser("muyz","123","穆医生","内科");
 		service.save(user);
 		System.out.println(user.toString());
 

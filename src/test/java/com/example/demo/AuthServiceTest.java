@@ -1,17 +1,14 @@
 package com.example.demo;
 
-import com.example.demo.auth.MyUserDetails;
 import com.example.demo.auth.ResourceRoles;
 import com.example.demo.auth.Role;
 import com.example.demo.auth.service.ResourceRoleService;
 import com.example.demo.auth.service.RoleService;
 import com.example.demo.auth.service.UserService;
-import com.example.demo.security.MyGrantedAuthority;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 

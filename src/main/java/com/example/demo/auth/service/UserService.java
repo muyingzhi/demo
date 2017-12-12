@@ -1,13 +1,12 @@
 package com.example.demo.auth.service;
 
-import com.example.demo.auth.MyUserDetails;
-import com.example.demo.auth.User;
+import com.example.demo.auth.SysUser;
 import com.example.demo.auth.UserRoles;
 import com.example.demo.auth.mapper.UserDao;
 import com.example.demo.auth.mapper.UserRolesDao;
 import com.example.demo.security.MyGrantedAuthority;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,20 +25,15 @@ public class UserService implements UserDetailsService{
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = dao.findByUsername(username);
-		if (user!= null){
-			MyUserDetails ud= new MyUserDetails(user);
-			ud.setAuthorities(this.findAuthority(user.getUsername()));
-			return ud;
-		}
-		return null;
+		SysUser sysUser = this.findByUsername(username);
+		return new User(username,sysUser.getPassword(),this.findAuthority(username));
 	}
-	public User findByUsername(String username) {
+	public SysUser findByUsername(String username) {
 		return dao.findByUsername(username);
 	}
 
-	public User save(User user){
-		User dbUser = dao.findByUsername(user.getUsername());
+	public SysUser save(SysUser user){
+		SysUser dbUser = dao.findByUsername(user.getUsername());
 		if (dbUser!=null){
 			user.setId(dbUser.getId());
 		}

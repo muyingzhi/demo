@@ -1,14 +1,11 @@
-package com.example.demo.auth;
+package com.example.demo.security;
 
-import java.util.ArrayList;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Collection;
 import java.util.HashSet;
-
-import com.example.demo.security.MyGrantedAuthority;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
 
 public class MyUserDetails implements UserDetails{
 	private long expires;
@@ -30,6 +27,15 @@ public class MyUserDetails implements UserDetails{
 	public MyUserDetails(User user) {
 		this.username = user.getUsername();
 		this.password = user.getPassword();
+		this.enabled = user.isEnabled();
+
+		Collection<MyGrantedAuthority> c = new HashSet<>();
+		for(GrantedAuthority ga: user.getAuthorities()) {
+			MyGrantedAuthority myGrantedAuthority = new MyGrantedAuthority();
+			myGrantedAuthority.setAuthority(ga.getAuthority());
+			c.add(myGrantedAuthority);
+		}
+		this.setAuthorities(c);
 	}
 
 	public void setUsername(String username) {

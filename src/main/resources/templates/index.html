@@ -69,7 +69,7 @@
                     alert("login ok")
                     var token = setting.getResponseHeader("X-AUTH-TOKEN")
                     localStorage.setItem("token",token);
-//            window.location.href="/main"
+                    window.location.href="/main"
                 } else {
                     alert("error:" + data.message);
                 }

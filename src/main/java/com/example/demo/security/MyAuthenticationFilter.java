@@ -1,6 +1,5 @@
 package com.example.demo.security;
 
-import com.example.demo.auth.MyUserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
